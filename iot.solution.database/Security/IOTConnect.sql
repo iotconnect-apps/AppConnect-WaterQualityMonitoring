@@ -1,0 +1,5 @@
+﻿CREATE SCHEMA [IOTConnect]
+    AUTHORIZATION [dbo];
+
+
+

@@ -1,0 +1,20 @@
+.device-status{
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 5px;
+    border-radius: 50%;
+  }
+  .device-status.on{
+    background-color: #41c363;
+  }
+  .device-status.off{
+    background-color: #ff0000;
+  }
+
+::ng-deep .mat-select-panel:not([class*=mat-elevation-z]){
+  margin-left: -49px !important;
+  width: 220px !important;
+  max-width: unset !important;
+} 

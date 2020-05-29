@@ -1,0 +1,180 @@
+<!-- Content Header (Page header) -->
+
+<section class="content-header">
+	<h1>{{moduleName}}</h1>
+</section>
+<!-- Main content -->
+
+<section class="content">
+	<mat-card class="support-card">
+		<div class="row">
+			<div class="col col-ld-11">
+				<form [formGroup]="sensorForm" (ngSubmit)="addSensor()" autocomplete="off" class="form-horizontal common-form">
+					<div class="row">
+						<div class="col-md-4">
+							<fieldset class="form-group form-field">
+								<label class="form-label">Name<b>*</b></label>
+								<mat-form-field>
+									<input matInput name="name" formControlName="name" maxlength="60" type="text"
+												 class="form-control" tabindex="3" placeholder="Name">
+									<div class="form-control-feedback" *ngIf="sensorForm.controls['name'].errors">
+										<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+											 *ngIf="sensorForm.controls['name'].errors.required && checkSubmitStatus">
+											Please enter Name
+										</p>
+									</div>
+								</mat-form-field>
+							</fieldset>
+						</div>
+						<div class="col-md-4">
+							<fieldset class="form-group form-field">
+								<label class="form-label">Building<b>*</b></label>
+								<mat-form-field>
+									<mat-select placeholder="{{selectBuilding}}" formControlName="buildingGuid" (selectionChange)="getwings($event.value)" tabindex="3">
+										<mat-option *ngFor="let build of buildingList" [value]="build?.value">
+											{{build.text}}
+										</mat-option>
+									</mat-select>
+									<div class="form-control-feedback" *ngIf="sensorForm.controls['buildingGuid'].errors">
+										<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+											 *ngIf="sensorForm.controls['buildingGuid'].errors.required && checkSubmitStatus">
+											Please select Building
+										</p>
+									</div>
+								</mat-form-field>
+							</fieldset>
+						</div>
+						<div class="col-md-4">
+							<fieldset class="form-group form-field">
+								<label class="form-label">Wing<b>*</b></label>
+								<mat-form-field>
+										<mat-select placeholder="{{selectWing}}" formControlName="entityGuid" tabindex="3">
+											<mat-option *ngFor="let wing of wingList" [value]="wing?.guid">
+												{{wing.name}}
+											</mat-option>
+										</mat-select>
+										<div class="form-control-feedback" *ngIf="sensorForm.controls['entityGuid'].errors">
+											<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+												 *ngIf="sensorForm.controls['entityGuid'].errors.required && checkSubmitStatus">
+												Please select Wing
+											</p>
+										</div>
+								</mat-form-field>
+							</fieldset>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<fieldset class="form-group form-field">
+								<label class="form-label">Kit Code<b>*</b></label>
+								<mat-form-field>
+									<input matInput name="kitcode" formControlName="kitcode" type="text"
+												 class="form-control" tabindex="5" placeholder="Kit Code">
+									<div class="form-control-feedback" *ngIf="sensorForm.controls['kitcode'].errors">
+										<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+											 *ngIf="sensorForm.controls['kitcode'].errors.required && checkSubmitStatus">
+											Please enter Kit Code
+										</p>
+										<p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+											 *ngIf="sensorForm.controls['kitcode'].errors.pattern && checkSubmitStatus">
+											Special characters not allowed in Kit Code
+										</p>
+									</div>
+								</mat-form-field>
+							</fieldset>
+						</div>
+						<div class="col-md-4">
+							<fieldset class="form-group form-field">
+								<label class="form-label">Unique ID<b>*</b></label>
+								<mat-form-field>
+									<input matInput name="uniqueId" formControlName="uniqueId" type="text"
+												 class="form-control" tabindex="6" placeholder="Unique Id">
+									<div class="form-control-feedback" *ngIf="sensorForm.controls['uniqueId'].errors">
+										<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+											 *ngIf="sensorForm.controls['uniqueId'].errors.required && checkSubmitStatus">
+											Please enter Unique ID
+										</p>
+										<p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+											 *ngIf="sensorForm.controls['uniqueId'].errors.pattern && checkSubmitStatus">
+											 Special characters and white space not allowed in unique ID
+										</p>
+									</div>
+								</mat-form-field>
+							</fieldset>
+						</div>
+						<div class="col-md-4">
+							<fieldset class="form-group form-field">
+								<label class="form-label">Specification</label>
+								<mat-form-field>
+									<textarea matInput rows="3" maxlength="260" tabindex="7" class="form-control" formControlName="specification"
+														placeholder="Specification" name="specification"></textarea>
+								</mat-form-field>
+							</fieldset>
+						</div>
+					</div>
+
+					<div class="row">
+
+
+						<div class="col-md-4">
+							<fieldset class="form-group form-field">
+								<label class="form-label">Description</label>
+								<mat-form-field>
+									<textarea matInput rows="3" maxlength="260" tabindex="8" class="form-control" formControlName="description"
+														placeholder="Description" name="description"></textarea>
+								</mat-form-field>
+							</fieldset>
+						</div>
+
+						<div class="col-md-4">
+							<mat-label>Sensor Image</mat-label>
+							<fieldset class="form-group">
+								<label for="myFile" class="upload-file">
+									<input formControlName="imageFile" id="myFile" (change)="handleImageInput($event)" #myFile
+												 class="upload-image" type="file"
+												 accept=".jpg, .jpeg, .png" />
+									<div class="form-control-feedback" *ngIf="sensorForm.controls['imageFile'].errors">
+										<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+											 *ngIf="sensorForm.controls['imageFile'].errors.required && checkSubmitStatus">
+											Upload Image
+										</p>
+									</div>
+								</label>
+							</fieldset>
+							<fieldset class="form-group">
+								<ul class="image-list ">
+									<li>
+										<div class="user-profle-image">
+											<img alt="" class="img-fluid" #buildingImg
+													 src="{{fileUrl ? fileUrl :_appConstant.noImg}}" />
+										</div>
+										<span *ngIf="fileUrl">
+											<i class="material-icons" (click)="imageRemove()">clear</i>
+										</span>
+									</li>
+								</ul>
+							</fieldset>
+							<p>{{fileName}}</p>
+						</div>
+					</div>
+					<div class="row mt-4 mb-0">
+						<div class="col-lg-12">
+							<div class="form-field">
+								<div class="input-field ">
+									<button mat-flat-button color="primary"
+													class="text-white " title="Submit" type="submit">
+										Submit
+									</button>
+									<button mat-flat-button color="primary" class="text-white m-l-10" [routerLink]="['/sensorkits']"
+													title="Cancel">
+										Cancel
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</mat-card>
+</section>

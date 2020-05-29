@@ -1,0 +1,159 @@
+<!-- Content Header (Page header) -->
+
+<section class="content-header">
+	<h1>{{moduleName}}</h1>
+</section>
+<!-- Main content -->
+
+<section class="content">
+<mat-card class="support-card">
+ <div class="row">
+	<div class="col col-ld-11">
+	<form [formGroup]="genraterForm" (ngSubmit)="addGenerater()" autocomplete="off" class="form-horizontal common-form">
+		<div class="row">
+			<div class="col-md-4">
+				<fieldset class="form-group form-field">
+					<label class="form-label">Location<b>*</b></label>
+					<mat-form-field>
+						<mat-select placeholder="Select Location" formControlName="locationGuid" [(ngModel)]="genraterObject['locationGuid']" tabindex="1">
+						  <mat-option *ngFor="let location of locationList" [value]="getdata(location?.value)" >
+							{{location.text}}
+						  </mat-option>
+						</mat-select>
+						<div class="form-control-feedback" *ngIf="genraterForm.controls['locationGuid'].errors">
+							<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+								*ngIf="genraterForm.controls['locationGuid'].errors.required && checkSubmitStatus">
+								Please select Location
+							</p>
+					</div>
+				</mat-form-field>
+				</fieldset>
+			</div>
+
+			<div class="col-md-4">
+				<fieldset class="form-group form-field">
+					<label class="form-label">Type<b>*</b></label>
+					<mat-form-field>
+						<mat-select placeholder="Select Type" formControlName="typeGuid"    [(ngModel)]="genraterObject['typeGuid']" tabindex="2">
+						  <mat-option *ngFor="let type of typeList" [value]="getdata(type?.value)" >
+							{{type.text}}
+						  </mat-option>
+						</mat-select>
+						<div class="form-control-feedback" *ngIf="genraterForm.controls['typeGuid'].errors">
+							<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+								*ngIf="genraterForm.controls['typeGuid'].errors.required && checkSubmitStatus">
+								Please select Type
+							</p>
+					</div>
+				</mat-form-field>
+				</fieldset>
+			</div>
+			
+				<div class="col-md-4">
+					<fieldset class="form-group form-field">
+						<label class="form-label">Name<b>*</b></label>
+						<mat-form-field>
+							<input matInput name="name" formControlName="name" maxlength="60" type="text" [(ngModel)]="genraterObject['name']"
+								class="form-control" tabindex="3" placeholder="Name">
+							<div class="form-control-feedback" *ngIf="genraterForm.controls['name'].errors">
+								<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+									*ngIf="genraterForm.controls['name'].errors.required && checkSubmitStatus">
+									Please enter Name
+								</p>
+							</div>
+						</mat-form-field>
+					</fieldset>
+				</div>		
+		</div>
+	
+	<div class="row">
+		<div class="col-md-4">
+				<fieldset class="form-group form-field">
+					<label class="form-label">Kit Code<b>*</b></label>
+					<mat-form-field>
+						<input matInput name="kitcode" formControlName="kitcode" type="text" [(ngModel)]="genraterObject['kitcode']"
+							class="form-control" tabindex="5" placeholder="Kit Code">
+						<div class="form-control-feedback" *ngIf="genraterForm.controls['kitcode'].errors">
+							<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+								*ngIf="genraterForm.controls['kitcode'].errors.required && checkSubmitStatus">
+								Please enter Kit Code
+							</p>
+						</div>
+					</mat-form-field>
+				</fieldset>
+			</div>		
+		<div class="col-md-4">
+			<fieldset class="form-group form-field">
+				<label class="form-label">Unique ID<b>*</b></label>
+				<mat-form-field>
+					<input matInput name="uniqueId" formControlName="uniqueId" type="text" [(ngModel)]="genraterObject['uniqueId']"
+						class="form-control" tabindex="6" placeholder="Unique ID">
+					<div class="form-control-feedback" *ngIf="genraterForm.controls['uniqueId'].errors">
+						<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+							 *ngIf="genraterForm.controls['uniqueId'].errors.required && checkSubmitStatus">
+							Please enter Unique ID
+						</p>
+						<p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+							 *ngIf="genraterForm.controls['uniqueId'].errors.pattern && checkSubmitStatus">
+							Special characters not allowed in Unique ID
+						</p>
+					</div>
+				</mat-form-field>
+			</fieldset>
+		</div>
+		<div class="col-md-4">
+			<fieldset class="form-group form-field">
+			  <label class="form-label">Specification</label>
+			  <mat-form-field>
+				<textarea matInput rows="3" maxlength="260" tabindex="7" class="form-control" formControlName="specification"
+						  placeholder="Specification" name="specification" ></textarea>
+			  </mat-form-field>
+			</fieldset>
+		  </div>
+
+		
+	</div>
+	<div class="row">
+		
+				  <div class="col-md-4">
+						<fieldset class="form-group form-field">
+						  <label class="form-label">Description</label>
+						  <mat-form-field>
+							<textarea matInput rows="3" maxlength="260" tabindex="8" class="form-control" formControlName="description"
+									  placeholder="Description" name="description" ></textarea>
+						  </mat-form-field>
+						</fieldset>
+					  </div>
+				  
+		<div class="col-md-4">
+				<fieldset class="form-group" style="padding-top: 32px;">
+				  <input formControlName="imageFile" (change)="handleImageInput($event)" class="upload-image" type="file" />
+				  <div class="form-control-feedback" *ngIf="genraterForm.controls['imageFile'].errors">
+					<p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+					   *ngIf="genraterForm.controls['imageFile'].errors.required && checkSubmitStatus">
+					  Upload Image
+					</p>
+				  </div>
+				</fieldset>
+		</div>
+		
+	</div>
+		
+		
+		<div class="row mt-4 mb-0">
+				<div class="col-lg-12">
+				  <div class="form-field">
+					<div class="input-field ">
+					  <button mat-flat-button color="primary" 
+						class="text-white " title="Submit" type="submit">Submit</button>
+					  <button mat-flat-button color="primary" class="text-white m-l-10" [routerLink]="['/generators']"
+						title="Cancel">Cancel</button>
+					</div>
+				  </div>
+				</div>
+		</div>
+	</form>
+	</div>
+  </div>
+</mat-card>
+</section>

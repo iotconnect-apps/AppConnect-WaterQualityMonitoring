@@ -1,0 +1,423 @@
+<section class="building-detail-header">
+  <div class="detail-header-left">
+    <a (click)="location.back();" class="back-title-link" href="javascript:;">
+      <i class="fa fa-angle-left"></i>
+    </a>
+    <span class="building-detail-address">
+      <i class="fa fa-map-marker"></i>
+      {{buildingname}}
+    </span>
+  </div>
+  <div class="detail-header-right ml-auto d-flex flex-wrap align-items-center">
+    <mat-form-field class="mb-0 m-l-15">
+      <mat-label>Select Wing</mat-label>
+      <mat-select (selectionChange)="getDeviceName($event.value)" [(ngModel)]="winguid">
+        <mat-option *ngFor="let wing of wingList" [value]="wing.guid">
+          {{wing.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="mb-0 m-l-15" >
+      <mat-label>Select Sensor</mat-label>
+      <mat-select (selectionChange)="getSeUniqueName($event.value)" [(ngModel)]="sensguids">
+        <mat-option *ngFor="let sens of sensorList" [value]="sens.value">
+          {{sens.text}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!--<span class="m-l-15">
+    Water Level:
+    <strong>8000 <sub>gallons</sub></strong>
+    </span>-->
+  </div>
+</section>
+
+
+<section class="content">
+  <div class="building-detail-wrapper" >
+    <h2 *ngIf="ishow == true">
+      <div class="device-status mr-2" [ngClass]="(deviceIsConnected)?'on':'off'"></div> {{senName}}
+    </h2>
+    <div class="row">
+
+      <!--Wing List start-->
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-md-12 col-lg-12">
+            <div class="drag-body dashboard-widget">
+              <div class="panel-heading">
+                <h5 class="panel-title"> Wings </h5>
+                <!-- <ul class="filter-for-chart">
+                  <li>
+                    <button [disableRipple]="true" mat-icon-button>
+                      <mat-icon>more_horiz</mat-icon>
+                    </button>
+                  </li>
+                </ul> -->
+              </div>
+              <mat-card class="dashboard-card mat-card">
+                <div class="cropscontainer">
+                  <div class="user-grid-box m-r-20 m-b-20" *ngFor="let wing of wingList">
+                    <div class="text-center text-center m-r-20 m-l-20">
+                      <div class="crops-img-box">
+                        <img alt="" class="img-fluid"
+                              src="{{wing.image == '00000000-0000-0000-0000-000000000000' || wing.image == null || wing.image == '' ? _appConstant.noImg: mediaUrl + wing.image}}">
+                      </div>
+                      <p class="wing-title-details" [title]="wing.name">{{wing.name}}</p>
+                    </div>
+                    <div class="user-actions d-flex flex-wrap">
+                      <!---->
+                      <!---->
+                      <div class="user-actions-cta text-center ng-star-inserted">
+                        <a class="green" href="javascript:;">
+                          <img alt="Edit" src="../../../assets/images/icon-edit.svg"
+                                (click)="getWingDetails(wing.guid);">
+                        </a>
+                      </div>
+                      <!---->
+                      <div class="user-actions-cta text-center">
+                        <a class="red" href="javascript:void(0)" data-toggle="modal"
+                            data-target="#deviceDeleteModal" (click)="deleteModel(wing)"
+                            title="Delete">
+                          <img src="./assets/images/icon-delete.svg">
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="user-grid-box bigaddbutton m-b-20">
+                    <a style="cursor:pointer" href="javascript:void(0);" (click)="Respond();">
+                      <i class="material-icons">add</i>
+                    </a>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Wing List end-->
+
+      <div class="col-lg-3" *ngIf="ishow == true">
+        <div class="chart-holder">
+          <div class="chart-holder-title">
+            <rg-gauge-chart [canvasWidth]="canvasWidth" [needleValue]="needleValue"
+                            [centralLabel]="centralLabel" [options]="options" [name]="name" [bottomLabel]="bottomLabel">
+            </rg-gauge-chart>
+            <ul class="list-unstyled chart-legend-list">
+              <li>
+                <span class="legend-label legend-excellent">0-25</span>
+                <span>Excellent</span>
+              </li>
+              <li>
+                <span class="legend-label legend-good">26-50</span>
+                <span>Good</span>
+              </li>
+              <li>
+                <span class="legend-label legend-poor">51-75</span>
+                <span>Poor</span>
+              </li>
+              <li>
+                <span class="legend-label legend-warning">76-100</span>
+                <span>Very Poor</span>
+              </li>
+              <li>
+                <span class="legend-label legend-danger">Above 100</span>
+                <span>Unsuitable for drinking</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-9" *ngIf="ishow == true">
+        <div class="row">
+          <div class="col-md-12 col-lg-7">
+            <div class="row dashboardtop-widget">
+              <div class="col-xl-4 col-lg-4 m-b-20"
+                   *ngFor="let smallWidget of smallWidgetData; let i = index;">
+                <div class="dashboard-chart text-center" [ngClass]="{ 'bggreenlwidget' : i == 0, 'bgbluewidget' : i == 1, 'bgwarningwidget' : i == 2,
+'bgpinkwidget' : i == 3, 'bgyellowwidget' : i == 4, 'bgorangewidget' : i == 5,
+'bgwarningwidget2' : i == 6, 'bgdangerwidget' : i == 7, 'bggreenlwidget2' : i == 8 }">
+                  <h4 *ngIf="smallWidget.smallWidgetTitle == 'Temperature' ">
+                    {{ WidgetData.temp }}<sup>o</sup>C
+                  </h4>
+                  <h4 *ngIf="smallWidget.smallWidgetTitle == 'pH' ">
+                    {{ WidgetData.ph}}<sub>pH</sub>
+                  </h4>
+                  <h4 *ngIf="smallWidget.smallWidgetTitle == 'Sodium'">
+                    {{ WidgetData.na}}<sub>mg/l</sub>
+                  </h4>
+                  <h4 *ngIf="smallWidget.smallWidgetTitle == 'Turbidity' ">
+                    {{ WidgetData.turbidity}}<sub>NTU</sub>
+                  </h4>
+                  <h4 *ngIf="smallWidget.smallWidgetTitle == 'Conductivity' ">
+                    {{ WidgetData.conv}}<sub>S/cm</sub>
+                  </h4>
+                  <h4 *ngIf="smallWidget.smallWidgetTitle == 'TDS' ">
+                    {{ WidgetData.tds}}<sub>mg/l</sub>
+                  </h4>
+                  <h4 *ngIf="smallWidget.smallWidgetTitle == 'Chloride' ">
+                    {{ WidgetData.cl}}<sub>mg/l</sub>
+                  </h4>
+                  <h4 *ngIf="smallWidget.smallWidgetTitle == 'Nitrate' ">
+                    {{ WidgetData.n03}}<sub>mg/l</sub>
+                  </h4>
+                  <h4 *ngIf="smallWidget.smallWidgetTitle == 'Oxygen' ">
+                    {{ WidgetData.do}}<sub>mg/l</sub>
+                  </h4>
+                  <p class="small-widget-heading">{{ smallWidget.smallWidgetTitle }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-lg-5">
+            <div class="drag-body dashboard-widget ">
+              <div class="panel-heading">
+                <h5 class="panel-title w-100"> Alerts </h5>
+                <div style="margin-right: 20px;" class="tab-link-bar" *ngIf="alerts?.length>0">
+                  <a class="text-nowrap" [routerLink]="['/alerts/',winguid,sensguid]"
+                     href="javascript:;">View All</a>
+                </div>
+              </div>
+              <mat-card class="dashboard-card mat-card pt-0">
+                <ul *ngIf="alerts?.length>0" class="alerts-dashboard alerts-building-list">
+                  <li [ngClass]="alert['severity']" *ngFor="let alert of alerts">
+                    <span class="alerts-date">{{getLocalDate(alert['eventDate'])}}</span>
+                    <span class="alerts-info">
+                        {{alert['message']}}
+                      <!-- <span class="alerts-info-right alerts-date-text"></span> -->
+                    </span>
+                  </li>
+                </ul>                
+                <div *ngIf="alerts?.length==0" class="centerclass no-record-building-details">
+                  No records found
+                </div>
+                <div class="alert-indicator-wrapper">
+                  <div class="alert-indicator-list">
+                    <div class="alert-indicator Critical">
+                      <span class="legend"></span>
+                      <span class="alert-text">Critical</span>
+                    </div>
+                    <div class="alert-indicator Information">
+                      <span class="legend"></span>
+                      <span class="alert-text">Information</span>
+                    </div>
+                    <div class="alert-indicator Major">
+                      <span class="legend"></span>
+                      <span class="alert-text">Major</span>
+                    </div>
+                    <div class="alert-indicator Minor">
+                      <span class="legend"></span>
+                      <span class="alert-text">Minor</span>
+                    </div>
+                    <div class="alert-indicator Warning">
+                      <span class="legend"></span>
+                      <span class="alert-text">Warning</span>
+                    </div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+
+      </div>            
+
+      <div class="col-lg-6" *ngIf="ishow == true">
+        <div class="drag-body dashboard-widget m-b-30 h-100">
+          <div class="panel-heading">
+            <h5 class="panel-title w-100"> Consumption </h5>
+            <ul class="filter-for-chart chart-filter-header">           
+              <li>
+                <button [disableRipple]="true" mat-icon-button 
+                (click)="isOpenFilterGraph = !isOpenFilterGraph;">
+                  <mat-icon>more_horiz</mat-icon>
+                </button>
+                <div class="status-ticket-dropdown dashboard-custom-dropdown" 
+                *ngIf="isOpenFilterGraph">
+                <mat-radio-group aria-label="Select an option" 
+                  (change)="changeGraphCunssumer($event)">
+                  <mat-radio-button [checked]="checkvalue == true ? true : false" value="week" class="m-r-10">Week</mat-radio-button>
+                  <mat-radio-button value="month" class="m-r-10">Month</mat-radio-button>
+                </mat-radio-group>
+                </div>
+              </li>
+            </ul>           
+          </div>
+          <mat-card class="dashboard-card mat-card">
+            <google-chart *ngIf="columnChart2.dataTable?.length" [data]="columnChart2"></google-chart>
+            <div class="centerclass soil-nutritions" *ngIf="!columnChart2.dataTable?.length">
+              No Data found
+            </div>
+          </mat-card>
+        </div>
+      </div>
+      <div class="col-lg-6" *ngIf="ishow == true">
+        <div class="drag-body dashboard-widget m-b-30 h-100">
+          <div class="panel-heading">
+            <h5 class="panel-title w-50"> Quality Parameter </h5>
+
+            <div class="d-flex align-items-center">
+              <a data-toggle="modal" href="#myModal"><strong>Telemetry Data</strong></a>
+              <ul class="filter-for-chart chart-filter-header">           
+                <li>
+                  <button [disableRipple]="true" mat-icon-button 
+                  (click)="isOpenFilterGraph2 = !isOpenFilterGraph2;">
+                    <mat-icon>more_horiz</mat-icon>
+                  </button>
+                  <div class="status-ticket-dropdown dashboard-custom-dropdown" 
+                  *ngIf="isOpenFilterGraph2">
+                  <mat-radio-group aria-label="Select an option" (change)="changeGraphFilter($event)">
+                    <mat-radio-button [checked]="checkvaluequaility == true ? true : false" value="week" class="m-r-10">Week</mat-radio-button>
+                    <mat-radio-button value="month" class="m-r-10">Month</mat-radio-button>
+                  </mat-radio-group>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+          </div>
+          <mat-card class="dashboard-card mat-card">
+
+            <mat-tab-group (selectedTabChange)="onTabChangedata($event)" [selectedIndex]="selectedIndex">
+              <mat-tab *ngFor="let attdata of attname" label="{{attdata.text}}">
+                <div *ngIf="!isChartLoaded" style="padding: 188px;text-align: center;">
+                  Loading...
+                </div>
+                <ng-container *ngIf="isChartLoaded">
+                  <google-chart *ngIf="columnChart3.dataTable?.length" [data]="columnChart3">
+                  </google-chart>
+                </ng-container>
+                <div class="centerclass soil-nutritions" *ngIf="!columnChart3.dataTable?.length">
+                  No Data found
+                </div>
+              </mat-tab>
+
+            </mat-tab-group>
+
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="create-drawer transform" *ngIf="respondShow">
+  <div class="head">
+    <a href="javascript:void()" class="closedrawer" (click)="closerepond()">
+      <i class="material-icons">close</i>
+    </a>
+    <h2>{{wingModuleName}}</h2>
+  </div>
+  <div class="form-container">
+    <div class="view-form">
+      <form [formGroup]="wingForm" (ngSubmit)="manageWing();" autocomplete="off"
+            class="form-horizontal common-form">
+        <div class="row">
+          <div class="col-12">
+            <label class="form-label">Name<b>*</b></label>
+            <mat-form-field>
+              <input matInput name="name" formControlName="name" type="text" maxlength="50"
+                     [(ngModel)]="wingObject['name']" class="form-control" tabindex="1" placeholder="Name">
+              <div class="form-control-feedback" *ngIf="wingForm.controls['name'].errors">
+                <p class="form-tooltip-error sm " [ngClass]="{'error':true}"
+                   *ngIf="wingForm.controls['name'].errors.required && checkSubmitStatus">
+                  Please enter Wing Name
+                </p>
+              </div>
+            </mat-form-field>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Description</label>
+            <mat-form-field>
+              <textarea matInput rows="3" class="form-control" formControlName="description"
+                        placeholder="Description" name="description" [(ngModel)]="wingObject['description']"
+                        maxlength="255" tabindex="2"></textarea>
+            </mat-form-field>
+          </div>
+          <div class="col-12">
+            <mat-label class="d-block">Wing Image</mat-label>
+            <label for="myFile" class="upload-file">
+              <input formControlName="imageFile" id="myFile" (change)="handleImageInput($event)" #myFile
+                     class="upload-image" type="file" accept=".jpg, .jpeg, .png" tabindex="3" />
+
+              <div class="form-control-feedback" *ngIf="wingForm.controls['imageFile'].errors">
+                <p class="form-tooltip-error sm" [ngClass]="{'error':true}"
+                   *ngIf="wingForm.controls['imageFile'].errors.required && checkSubmitStatus">
+                  Upload Image
+                </p>
+              </div>
+            </label>
+            <!--<a href="javascript:()" class="underline">Update Image</a>-->
+            <fieldset class="form-group">
+              <ul class="image-list m-t-10">
+                <li>
+                  <div class="user-profle-image">
+                    <!-- <img *ngIf="wingObject['image']" (click)="imageRemove()" class="close-icn"
+                    src="../../../../assets/images/cancel-dashboard.svg" alt=""> -->
+                    <img alt="" class="img-fluid"
+                         src="{{wingObject['image'] == '00000000-0000-0000-0000-000000000000' || wingObject['image'] == null || wingObject['image'] == '' ? _appConstant.noImg: wingObject['image']}}" />
+                    <!--<a href="javascript:()" class="underline">Update Image</a>-->
+
+                  </div>
+                  <span *ngIf="wingObject['image']">
+                    <i class="material-icons" (click)="imageRemove()">clear</i>
+                  </span>
+                </li>
+              </ul>
+            </fieldset>
+            <p>{{fileName}}</p>
+          </div>
+          <div class="col-12 mt-4">
+            <div class="form-field">
+              <div class="input-field ">
+                <button mat-flat-button color="primary" class="text-white " title="{{buttonname}}"
+                        type="submit">
+                  {{buttonname}}
+                </button>
+                <button mat-flat-button color="primary" class="text-white m-l-10"
+                        (click)="closerepond()" title="Cancel">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="myModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content drag-body ">
+
+      <div class="panel-heading">
+        <h4 class="panel-title">Telemetry Data</h4>
+        <!-- <button type="button" [disableRipple]="true" matSuffix mat-button class="close mr-3"
+                data-dismiss="modal">
+          &times;
+        </button> -->
+        <a href="javascript:;" class="close m-r-10" data-dismiss="modal">
+          &times;
+        </a>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-body-header justify-content-end align-items-center">
+          <h2>{{senName}}</h2>
+          <button mat-icon-button class="dropdown-toggle custom-dropdown-toggle" data-toggle="dropdown">
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+
+        </div>
+        <div class="modal-body-data">
+          <div>
+
+            <canvas baseChart [chartType]="'line'" [datasets]="datasets" [options]="optionsdata">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

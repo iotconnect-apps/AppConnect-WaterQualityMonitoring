@@ -1,0 +1,171 @@
+<section class="content-header">
+  <h1>Dashboard</h1>
+</section>
+
+<div class="main-page dashboard">
+  <div class="dashboard-carousel-wrapper">
+    <ngx-slick-carousel class="carousel"
+                        #homeCarousel="slick-carousel"
+                        [config]="slideConfig">
+      <div ngxSlickItem *ngFor="let building of buildingList">
+        <div class="water-topwidget">
+          <div class="water-topwidget-header">
+            <a [routerLink]="['/buildings/details',building['guid']]" class="topwidget-title-link">
+              <span matTooltip="{{building.name}}" matTooltipPosition="before">{{building.name}}</span>
+              <i class="fa fa-angle-right"></i>
+            </a>
+            <div class="topwidget-title-address">
+              <div class="topwidget-title-address-left">
+                <i class="fas fa-map-pin"></i>
+                <span matTooltip="{{building.address}}, {{building.address2}} {{building.city}}. {{building.zipcode}}" 
+                matTooltipPosition="before">
+                  {{building.address}}, {{building.address2}} {{building.city}}. {{building.zipcode}}
+                </span>
+              </div>
+              <div class="topwidget-title-address-right">
+                <span>
+                  <i class="fa fa-building"></i>
+                </span>
+                <span class="topwidget-counter">{{building.totalSubEntities}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="water-topwidget-body">
+            <div class="topwidget-body-title-box">
+              <span class="topwidget-body-title">
+                Central Tank Info:
+                <i class="fa fa-info"></i>
+
+                <div class="topwidget-body-dropdown">
+                  <ul class="list-unstyled">
+                    <li>Temperature: <strong class="text-available">Upto 37<sup>o</sup>C</strong></li>
+                    <li>pH: <strong class="text-available">6.5 to 8.5<sub>pH</sub></strong></li>
+                    <li>Turbidity: <strong class="text-available">5.0 to 10<sub>NTU</sub></strong></li>
+                    <li>Sodium : <strong class="text-available">Up to 1200<sub>mg/l</sub></strong></li>
+                    <li>TDS: <strong class="text-available">500 to 2000<sub>mg/l</sub></strong></li>
+                    <li>Conductivity: <strong class="text-available">100 to 2000<sub>S/cm</sub></strong></li>
+                    <li>Chloride: <strong class="text-available">Up to 250<sub>mg/l</sub></strong></li>
+                    <li>Nitrate: <strong class="text-available">Up to 50<sub>mg/l</sub></strong></li>
+                    <li>Oxygen: <strong class="text-available">Up to 5<sub>mg/l</sub></strong></li>
+                  </ul>
+                </div>
+
+              </span>
+            </div>
+            <div class="row topwidget-body-content">
+              <div class="col-xl-6">
+                <ul class="list-unstyled topwidget-body-content-list">
+                  <!--<li>WQI: <strong>{{building.entityDetails?.wqi}}</strong></li>-->
+                  <!--<li>Water Level: <strong>1500 <sub>gallons</sub></strong></li>-->
+                  <li>Alerts: <strong>{{building.totalAlerts}}</strong></li>
+                  <li>pH: <strong [ngClass]="(building.entityDetails?.ph >= 6.5 &&  building.entityDetails?.ph <= 8.5)?'text-available' :'text-unavailable'">{{building.entityDetails?.ph | number: '1.1-2' }} <sub>pH</sub></strong></li>
+                  <li>TDS: <strong [ngClass]="(building.entityDetails?.tds >= 500 &&  building.entityDetails?.tds <= 2000)?'text-available' :'text-unavailable'">{{building.entityDetails?.tds | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+                  <li>Conductivity: <strong [ngClass]="(building.entityDetails?.conv >= 100 &&  building.entityDetails?.conv <= 2000)?'text-available' :'text-unavailable'">{{building.entityDetails?.conv | number: '1.1-2' }} <sub>S/cm</sub></strong></li>
+                  <li>Nitrate: <strong [ngClass]="(building.entityDetails?.n03 <= 50)?'text-available' :'text-unavailable'">{{building.entityDetails?.n03 | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+                </ul>
+              </div>
+              <div class="col-xl-6">
+                <ul class="list-unstyled topwidget-body-content-list">
+                  <!--<li>Alerts: <strong>3</strong></li>-->
+                  <li>Temperature: <strong [ngClass]="(building.entityDetails?.temp <= 37)?'text-available' :'text-unavailable'">{{building.entityDetails?.temp | number: '1.1-2' }}<sup>o</sup>C</strong></li>
+                  <li>Turbidity: <strong [ngClass]="(building.entityDetails?.turbidity >= 5.0 &&  building.entityDetails?.turbidity <= 10)?'text-available' :'text-unavailable'">{{building.entityDetails?.turbidity | number: '1.1-2' }} <sub>NTU</sub></strong></li>
+                  <li>Sodium : <strong [ngClass]="(building.entityDetails?.na <= 1200)?'text-available' :'text-unavailable'">{{building.entityDetails?.na | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+                  <li>Chloride: <strong [ngClass]="(building.entityDetails?.cl <= 250)?'text-available' :'text-unavailable'">{{building.entityDetails?.cl | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+                  <li>Oxygen : <strong [ngClass]="(building.entityDetails?.do <= 5)?'text-available' :'text-unavailable'">{{building.entityDetails?.do | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="water-topwidget-footer">
+            <span>
+              <span class="status-indicator status-green"></span>
+              Permissible
+            </span>
+            <span>
+              <span class="status-indicator status-red"></span>
+              Unacceptable
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </ngx-slick-carousel>
+    <!-- <button class="btn-next" (click)="nextSlide()">next</button>
+    <button class="btn-prev" (click)="prevSlide()">prev</button> -->
+  </div>
+
+  <!-- </ng-scrollbar> -->
+
+  <div class="row mt-4">
+    <div class="col-md-12 col-lg-8">
+      <div class="drag-body dashboard-widget">
+        <mat-card class="dashboard-card mat-card">
+          <agm-map [latitude]="lat" [longitude]="lng">
+            <agm-marker *ngFor="let loc of buildingList " [latitude]="loc.latitude ? loc.latitude : lat"
+                        [longitude]="loc.longitude ? loc.longitude : lng"
+                        [iconUrl]="{ url: '../../../../assets/images/greenhouse-location-icon.svg'}">
+              <agm-info-window [disableAutoPan]="false" [isOpen]="true" #infoWindow>
+                <strong>{{loc.name}}</strong><br>
+              </agm-info-window>
+            </agm-marker>
+
+          </agm-map>
+        </mat-card>
+      </div>
+    </div>
+    <div class="col-md-12 col-lg-4 mt-md-4 mt-lg-0">
+      <div class="drag-body dashboard-widget">
+        <div class="panel-heading">
+          <h5 class="panel-title"> Alerts </h5>
+          <div style="margin-right: 20px;" class="tab-link-bar" *ngIf="alerts?.length>0">
+            <a class="text-nowrap" [routerLink]="['/alerts']" href="javascript:;">View All</a>
+          </div>
+        </div>
+        <mat-card class="dashboard-card mat-card">
+          <ng-container *ngIf="alerts.length>0">
+            <ul class="alerts-dashboard alerts-dashboard-style2">
+              <li [ngClass]="alert['severity']" *ngFor="let alert of alerts">
+                <span class="alerts-info">{{alert['message']}}</span>
+                <span class="alert-info-title">
+                  <span class="alerts-info-left">
+                    <i class="fa fa-building"></i>
+                    {{alert['parentEntityName']}}, {{alert['entityName']}}
+                  </span>
+                  <span class="alerts-info-right alerts-date alerts-date-text">{{getLocalDate(alert['eventDate'])}}</span>
+                </span>
+              </li>
+            </ul>            
+          </ng-container>
+          <ng-container *ngIf="alerts.length==0">
+            <div class="centerclass no-records-wrapper">No records found</div>
+          </ng-container>
+          <div class="alert-indicator-wrapper">
+            <div class="alert-indicator-list">
+              <div class="alert-indicator Critical">
+                <span class="legend"></span>
+                <span class="alert-text">Critical</span>
+              </div>
+              <div class="alert-indicator Information">
+                <span class="legend"></span>
+                <span class="alert-text">Information</span>
+              </div>
+              <div class="alert-indicator Major">
+                <span class="legend"></span>
+                <span class="alert-text">Major</span>
+              </div>
+              <div class="alert-indicator Minor">
+                <span class="legend"></span>
+                <span class="alert-text">Minor</span>
+              </div>
+              <div class="alert-indicator Warning">
+                <span class="legend"></span>
+                <span class="alert-text">Warning</span>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,88 @@
+<section class="content-header">
+    <h1>Generator Listing</h1>
+    <div class="content-header-action">
+        <form>
+          <div>
+            <mat-form-field class="example-full-width">
+              <input class="search" matInput placeholder="Search" autocomplete="off" value="">
+              <button type="button" matSuffix mat-button class="search-btn">
+                <img src="../../../assets/images/search-icon.svg" alt="">
+              </button>
+            </mat-form-field>
+          </div>
+          <div class="p-l-20"><button type="button" mat-flat-button color="primary"
+              class="text-white">Add Generator</button></div>
+        </form>
+      </div>
+</section>
+
+<!-- <div class="table-container">
+    <table mat-table #gridtable [dataSource]="userDataSource" matSort aria-label="Elements"
+        (matSortChange)="getGridData()" matSortActive="createDate" matSortDirection="desc" matSortDisableClear
+        class="mat-table">
+
+        <ng-container matColumnDef="GeneratorId">
+            <th mat-header-cell *matHeaderCellDef> Generator id </th>
+            <td mat-cell *matCellDef="let element"> </td>
+        </ng-container>
+        <ng-container matColumnDef="Name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> </td>
+        </ng-container>
+        <ng-container matColumnDef="Location">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Location </th>
+            <td mat-cell *matCellDef="let element"> </td>
+        </ng-container>
+        <ng-container matColumnDef="Type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+            <td mat-cell *matCellDef="let element"> </td>
+        </ng-container>
+        <ng-container matColumnDef="KitCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Kit Code </th>
+            <td mat-cell *matCellDef="let element"> </td>
+        </ng-container>
+        <ng-container matColumnDef="Status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let element"> </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="w110">Actions</th>
+            <td mat-cell *matCellDef="let element">
+                <div class="table-icons">
+
+                    <a href="javascript:void(0)" title="View">
+                        <img src="../../../assets/images/view_icon.svg">
+                    </a>
+
+                    <a class="green" title="Edit">
+                        <img src="../../../assets/images/icon-edit.svg">
+                    </a>
+
+                    <a class="red" href="javascript:void(0)" title="Delete">
+                        <img src="../../../assets/images/icon-delete.svg">
+                    </a>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+        <ng-container matColumnDef="noData">
+            <td mat-footer-cell *matFooterCellDef colspan="12">
+                <div class="no_record_found">{{_appConstant?.noDataFound}}</div>
+            </td>
+        </ng-container>
+        <tr mat-footer-row *matFooterRowDef="['noData']"
+            [ngClass]="{'hide':!(userDataSource!=null && userDataSource?.data?.length==0)}"></tr>
+    </table>
+</div>
+
+
+<mat-paginator #paginator [length]="gridTotalRecord" [pageIndex]="pageIndex" [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions" (page)="getGridData()"
+    [showFirstLastButtons]="_appConstant.gridShowFirstLastButtons">
+</mat-paginator> -->
+
+<app-generator-detail></app-generator-detail>

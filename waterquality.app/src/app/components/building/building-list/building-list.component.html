@@ -1,0 +1,134 @@
+<section class="content-header">
+  <h1>{{moduleName}}</h1>
+  <div class="content-header-action">
+    <div class="instance-status-details m-r-20">
+      <div class="instance-status-box d-flex flex-wrap align-items-center">
+        <div class="col">
+          <div class="instance-status-info">
+            <span class="user-status-type status-green">Active</span>
+          </div>
+        </div>
+        <div class="col">
+          <div class="instance-status-info">
+            <span class="user-status-type status-red">Inactive</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <app-search-render [searchValue]="searchParameters.searchText" (searchEvent)="searchTextCallback($event)">
+      </app-search-render>
+    </div>
+    <div class="p-l-20">
+      <button type="button" [routerLink]="['/buildings/add']" mat-flat-button color="primary"
+              class="text-white" title="Add Building">
+        Add Building
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="main-page dashboard">
+  <div class="row water-top-widget-wrapper">
+    <div class="col-lg-4" *ngFor="let building of buildingList">
+      <div class="water-topwidget m-b-30">
+        <div (click)="activeInactiveBuilding(building.guid, true, building.name)"
+             *ngIf="building['isActive']" title="Change Status" class="cursor user-status-indicator status-green"></div>
+        <div (click)="activeInactiveBuilding(building.guid, false, building.name)"
+             *ngIf="!building['isActive']" title="Change Status" class="cursor user-status-indicator status-red"></div>
+        <div class="water-topwidget-header">
+          <a href="javascript:;" class="topwidget-title-link"
+             [routerLink]="['/buildings/details',building['guid']]">
+            <span matTooltip="{{building['name']}}" matTooltipPosition="before">{{building['name']}}</span>
+            <i class="fa fa-angle-right"></i>
+          </a>
+          <div class="topwidget-title-address">
+            <div class="topwidget-title-address-left">
+              <i class="fas fa-map-pin"></i>
+              <span 
+              matTooltip="{{building.address}}, {{building.address2}} {{building.city}} {{building.zipcode}}"
+              matTooltipPosition="before">
+              {{building.address}}, {{building.address2}} {{building.city}}. {{building.zipcode}}
+            </span>
+            </div>
+            <div class="topwidget-title-address-right">
+              <span>
+                <i class="fa fa-building"></i>
+              </span>
+              <span class="topwidget-counter">{{building.totalSubEntities}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="water-topwidget-body">
+          <div class="topwidget-body-title-box">
+            <span class="topwidget-body-title">
+              Central Tank Info:
+              <i class="fa fa-info"></i>
+
+              <div class="topwidget-body-dropdown">
+                <ul class="list-unstyled">
+                  <li>Temperature: <strong class="text-available">Upto 37<sup>o</sup>C</strong></li>
+                  <li>pH: <strong class="text-available">6.5 to 8.5<sub>pH</sub></strong></li>
+                  <li>Turbidity: <strong class="text-available">5.0 to 10<sub>NTU</sub></strong></li>
+                  <li>Sodium : <strong class="text-available">Up to 1200<sub>mg/l</sub></strong></li>
+                  <li>TDS: <strong class="text-available">500 to 2000<sub>mg/l</sub></strong></li>
+                  <li>Conductivity: <strong class="text-available">100 to 2000<sub>S/cm</sub></strong></li>
+                  <li>Chloride: <strong class="text-available">Up to 250<sub>mg/l</sub></strong></li>
+                  <li>Nitrate: <strong class="text-available">Up to 50<sub>mg/l</sub></strong></li>
+                  <li>Oxygen: <strong class="text-available">Up to 5<sub>mg/l</sub></strong></li>
+                </ul>
+              </div>              
+            </span>
+          </div>
+          <div class="row topwidget-body-content">
+            <div class="col-xl-6">
+              <ul class="list-unstyled topwidget-body-content-list">
+                <li>Alerts: <strong>{{building.totalAlerts}}</strong></li>
+                <!--<li>WQI: <strong>{{building.entityDetails?.wqi}}</strong></li>-->
+                <!--<li>Water Level: <strong>1500 <sub>gallons</sub></strong></li>-->
+                <li>pH: <strong [ngClass]="(building.entityDetails?.ph >= 6.5 &&  building.entityDetails?.ph <= 8.5)?'text-available' :'text-unavailable'">{{building.entityDetails?.ph | number: '1.1-2' }} <sub>pH</sub></strong></li>
+                <li>TDS: <strong [ngClass]="(building.entityDetails?.tds >= 500 &&  building.entityDetails?.tds <= 2000)?'text-available' :'text-unavailable'">{{building.entityDetails?.tds | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+                <li>Conductivity: <strong [ngClass]="(building.entityDetails?.conv >= 100 &&  building.entityDetails?.conv <= 2000)?'text-available' :'text-unavailable'">{{building.entityDetails?.conv | number: '1.1-2' }} <sub>S/cm</sub></strong></li>
+                <li>Nitrate: <strong [ngClass]="(building.entityDetails?.n03 <= 50)?'text-available' :'text-unavailable'">{{building.entityDetails?.n03 | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+              </ul>
+            </div>
+            <div class="col-xl-6">
+              <ul class="list-unstyled topwidget-body-content-list">
+                <!--<li>Alerts: <strong>3</strong></li>-->
+                <li>Temperature: <strong [ngClass]="(building.entityDetails?.temp <= 37)?'text-available' :'text-unavailable'">{{building.entityDetails?.temp | number: '1.1-2' }}<sup>o</sup>C</strong></li>
+                <li>Turbidity: <strong [ngClass]="(building.entityDetails?.turbidity >= 5.0 &&  building.entityDetails?.turbidity <= 10)?'text-available' :'text-unavailable'">{{building.entityDetails?.turbidity | number: '1.1-2' }} <sub>NTU</sub></strong></li>
+                <li>Sodium : <strong [ngClass]="(building.entityDetails?.na <= 1200)?'text-available' :'text-unavailable'">{{building.entityDetails?.na | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+                <li>Chloride: <strong [ngClass]="(building.entityDetails?.cl <= 250)?'text-available' :'text-unavailable'">{{building.entityDetails?.cl | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+                <li>Oxygen : <strong [ngClass]="(building.entityDetails?.do <= 5)?'text-available' :'text-unavailable'">{{building.entityDetails?.do | number: '1.1-2' }} <sub>mg/l</sub></strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="water-topwidget-footer">
+          <span>
+            <span class="status-indicator status-green"></span>
+            Permissible
+          </span>
+          <span>
+            <span class="status-indicator status-red"></span>
+            Unacceptable
+          </span>
+        </div>
+        <div class="water-topwidget-action-footer">
+          <div class="action-footer-links">
+            <a class="green" [routerLink]="['/buildings/',building['guid']]" title="Edit">
+              <img src="../../../assets/images/edit_icon.svg">
+            </a>
+          </div>
+          <div class="action-footer-links">
+            <a href="javascript:;" data-toggle="modal" data-target="#deviceDeleteModal"
+               (click)="deleteModel(building)" title="Delete">
+              <img alt="View" src="../../../assets/images/delete_icon.svg">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="buildingList.length === 0" class="centerclass">No records found</div>
+  </div>
+</div>
